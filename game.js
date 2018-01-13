@@ -97,8 +97,7 @@ obstacleAt(newPos, size) {
   if((!(newPos instanceof Vector)) || (!(size instanceof Vector))) {
     throw new Error('Аргументы не являются объектом типа Vector');
   }
-  //здесь надо думать, как обозначить границы объекта. И что-то здесь не работает. А, надо же все препятствия на поле возвращать
-  
+   
   var leftSide = Math.floor(newPos.x);
   var rightSide = Math.ceil(newPos.x + size.x);
   var topSide = Math.floor(newPos.y);
@@ -107,7 +106,15 @@ obstacleAt(newPos, size) {
     return 'wall';
   } else if(bottomSide < 0) {
     return 'lava';
-  } else return undefined;
+  }
+  for (let y = topSide; y < bottomSide; y++) {
+          for (let x = leftSide; x < rightSide; x++) {
+              var objType = this.grid[y][x];
+              if (objType) {
+                return objType;
+            } else return undefined;
+        }
+    }
 }
 
 removeActor(moveObj) {
