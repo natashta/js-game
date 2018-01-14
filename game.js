@@ -7,7 +7,7 @@ class Vector {
 }
 plus(vector) {
   if(!(vector instanceof Vector)) {
-    throw Error ('Можно прибавлять к вектору только вектор типа Vector');
+    throw new Error (`Можно прибавлять к вектору только вектор типа Vector`);
   }
   return new Vector (this.x + vector.x, this.y + vector.y);
 }
@@ -16,10 +16,11 @@ times(q) {
 }
 }
 
+
 class Actor {
     constructor (pos = new Vector(0,0), size = new Vector(1,1), speed = new Vector(0,0)) {
     if ((!(pos instanceof Vector)) || (!(size instanceof Vector)) || (!(speed instanceof Vector))){
-      throw new Error('Параметр должен быть объектом типа Vector');
+      throw new Error(`Параметр должен быть объектом типа Vector`);
     } 
 
     this.pos = pos;
@@ -52,23 +53,20 @@ isIntersect(moveObj) {
     throw new Error(`Объект должен быть объектом типа Actor ${moveObj}`);
 } 
   if (this === moveObj) return false;
-  if (moveObj.size.x < 0 || moveObj.size.y < 0) {
-			return false;
-	}
-  if ((moveObj.left >= this.right) || (moveObj.top >= this.bottom) || (moveObj.right <= this.left) || (moveObj.bottom <= this.top)) {
+	if ((moveObj.left >= this.right) || (moveObj.top >= this.bottom) || (moveObj.right <= this.left) || (moveObj.bottom <= this.top)) {
       return false;
   } else {return true;
   }
 }
 }
 
+
 class Level {
   constructor (grid = [], actors= []) {
     this.grid = grid;
     this.actors = actors;
-    Object.defineProperty(this, 'type', {
-      value: 'player'
-      });
+    this.player = this.actors.find(actor => actor.type == 'player');
+    
     this.height = this.grid.length;
     this.width = Math.max(...this.grid.map(function (el) {
 return el.length;
@@ -80,15 +78,15 @@ return el.length;
 isFinished() {
   if((this.status !== null) && (this.finishDelay < 0)) {
     return true;
-  } return false;
+  } else return false;
 }
 
 actorAt(moveObj) {
   if (!(moveObj instanceof Actor)) {
-    throw new Error('Объект должен быть объектом типа Actor');
+    throw new Error(`Объект должен быть объектом типа Actor`);
 } 
   if (!moveObj) {
-    throw new Error('Отсутствуют аргументы');
+    throw new Error(`Отсутствуют аргументы`);
 } 
   for(let object of this.actors){
 			if (typeof object !='undefined' && moveObj.isIntersect(object)){
@@ -99,9 +97,8 @@ actorAt(moveObj) {
 }
 
 obstacleAt(pos, size) {
-  
-  if((!(pos instanceof Vector)) || (!(size instanceof Vector))) {
-    throw Error('Аргументы не являются объектом типа Vector');
+    if((!(pos instanceof Vector)) || (!(size instanceof Vector))) {
+    throw new Error(`Аргументы не являются объектом типа Vector`);
   }
   
   var leftSide = Math.floor(pos.x);
@@ -143,17 +140,17 @@ noMoreActors(type) {
 
 playerTouched(type, moveObj) {
    if (this.status === null) {
-    if((type === 'lava') || (type === 'fireball')) {
+      if((type === 'lava') || (type === 'fireball')) {
       this.status = 'lost';
       return this.status;
     }
-    else if(type === 'coin') 
+    if(type === 'coin') 
   {
       this.removeActor(moveObj);
-      if(this.noMoreActors(moveObj)) {
+      if(this.noMoreActors('coin')) {
          this.status = 'won';
       }
     }
-  }
+   }
 }
 }
