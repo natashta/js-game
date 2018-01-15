@@ -180,12 +180,20 @@ createGrid(arrOfString) {
     return arr;
   }
 
+
 createActors(arrOfString) {
-  let arrMove = [];
-  if(this.actorFromSymbol.type === 'actor')
-  {
-    // не придумала
-  }
+		let arrMove = [];
+		arrOfString.forEach((row, y) => {
+		  for (let x in row) {
+		  	let Field = this.list[row[x]];
+				let obj = Object(Field);
+				if(obj === Actor) {
+					arrMove.push(new Field(new Vector(x, y)));
+				}
+			}
+		});
+	return arrMove;
+
 }
 
 parse(arrOfString) {
@@ -215,7 +223,7 @@ class Fireball extends Actor{
 	constructor(pos = new Vector(0,0), speed = new Vector(0,0)){	
 		super(pos, new Vector(1,1), speed);
 		Object.defineProperty(this, 'type', {
-      writable: false,
+      
       value: 'fireball'
       });
 	}
@@ -260,7 +268,7 @@ class Coin extends Actor {
   constructor (pos = new Vector()) {
     super (pos, new Vector(0.6, 0.6));
       Object.defineProperty(this, 'type', {
-      writable: false,
+    
       value: 'coin'
       });
       this.pos.plus(0.2, 0.1); 
@@ -292,7 +300,7 @@ class Player extends Actor {
       super(pos, new Vector(0.8, 1.5), new Vector(0, 0));
       this.pos.plus(0, -0.5);
       Object.defineProperty(this, 'type', {
-        writable: false,
+        
         value: 'player'
       });
     }
