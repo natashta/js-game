@@ -296,5 +296,64 @@ class Player extends Actor {
         value: 'player'
       });
     }
+}
 
+class LevelParser {
+  constructor (list) {
+    this.list = list;
+  }
+    
+actorFromSymbol(symbol) {
+  if(symbol === undefined) {
+    return undefined;
+  }
+  return this.list[symbol];
+}
+
+obstacleFromSymbol(symbol) {
+  switch (symbol) {
+    case 'x':
+      return 'wall';
+    case '!':
+      return 'lava';
+    default:
+      return undefined;
+    }
+}
+
+createGrid(arrOfString) {
+    let arr = [];
+    for (let row of arrOfString) {
+      const newRow = [];
+      for (let cell of row) {
+        newRow.push(this.obstacleFromSymbol(cell));
+      }
+      arr.push(newRow);
+    }
+    return arr;
+  }
+
+createActors(arrOfString) {
+  let arrMove = [];
+  if(this.actorFromSymbol() instanceof Actor)
+  {arrOfString.forEach((row, y) => {
+        row.split('').forEach((cell, x) => {
+          if (typeof this.list[cell] === 'function') {
+            const pos = new Vector(x, y);
+            const object = new this.list[cell](pos);
+            if (object instanceof Actor) {
+              arrMove.push(object);
+            }
+          }
+        });
+      });
+    }
+  return arrMove;
+}
+
+parse(arrOfString) {
+  const grid = this.createGrid(arrOfString);
+  const objects = this.createActors(arrOfString);
+  return new Level(grid, objects);
+}
 }
