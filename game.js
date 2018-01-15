@@ -151,6 +151,6 @@ playerTouched(type, moveObj) {
          this.status = 'won';
       }
     }
-   }
+  }
 }
 }
